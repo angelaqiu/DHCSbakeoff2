@@ -199,8 +199,15 @@ void draw() {
   rotate(radians(t.rotation));
   fill(255, 0, 0); //set color to semi translucent
   rect(0, 0, t.z, t.z);
+  
+  // KIMBERLY - CROSSHAIR
+  strokeWeight(1f);
+  stroke(255);
+  line(0, -t.z/2, 0, t.z/2);
+  line(-t.z/2, 0, t.z/2, 0);  
+  
   popMatrix();
-
+  
   //===========DRAW CURSOR SQUARE=================
   
   // Test if the cursor is over the box 
@@ -221,6 +228,13 @@ void draw() {
   strokeWeight(3f);
   stroke(currColor);
   rect(0,0, screenZ, screenZ);
+  
+    // draw the crosshairs
+  strokeWeight(1f);
+  stroke(255);
+  line(-screenZ, 0, screenZ, 0);
+  line(0, -screenZ, 0, screenZ);
+  
   popMatrix();
   
   
