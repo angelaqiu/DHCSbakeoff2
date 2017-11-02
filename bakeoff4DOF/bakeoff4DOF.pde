@@ -86,6 +86,7 @@ int sidebarWidth = 200;
 float totalWidth = 900.0;
 //===============Calvin===============
 
+float doneX, doneY;
 
 // Target class
 
@@ -157,16 +158,17 @@ void setup() {
   
   ellipseMode(RADIUS);
   
+  doneX = totalWidth - inchesToPixels(.5f);
+  doneY = inchesToPixels(.5f) * 8;
+  
   cbx1 = totalWidth - inchesToPixels(.5f);
-  cby1 = inchesToPixels(.5f) * 8;
+  cby1 = inchesToPixels(.5f) * 10;
   cbx2 = totalWidth - inchesToPixels(.5f);
-  cby2 = inchesToPixels(.5f) * 9;
+  cby2 = inchesToPixels(.5f) * 11;
   cbx3 = totalWidth - inchesToPixels(.5f);
-  cby3 = inchesToPixels(.5f) * 10;
+  cby3 = inchesToPixels(.5f) * 12;
   
 }
-
-
 
 void draw() {
   
@@ -232,6 +234,9 @@ void draw() {
   scaffoldControlLogic(); //you are going to want to replace this!
   text("Trial " + (trialIndex+1) + " of " +trialCount, width/2, inchesToPixels(.5f));
   
+  text("Done", doneX, doneY);
+  noFill();
+  rect(doneX, doneY, 100, 50);
   
   //===============Checkbox============
   //===============Calvin===============  
@@ -261,8 +266,6 @@ void draw() {
     
   fill(255);
   //===============Calvin===============  
-
-  
 
   
   //===========DRAW SIZE CONTROL =================
@@ -322,7 +325,6 @@ void draw() {
     // Draw the control
     fill(0,255,0);
     ellipse(bx2, by2, buttonSize, buttonSize);
-    
     
     //=========== CONSTRAIN MOUSE WITHIN WINDOW =================
     MouseInfo.getPointerInfo();
@@ -442,6 +444,23 @@ void scaffoldControlLogic()
       screenTransY+=inchesToPixels(.02f);
     }
   }
+  
+  //========== DONE BUTTON ==================
+  if (!pressed && mousePressed && mouseX > doneX && mouseX < doneX + 100 && mouseY > doneY && mouseY < doneY + 50) {
+    pressed = true;
+    if (userDone==false && !checkForSuccess())
+    errorCount++;
+
+    //and move on to next trial
+    trialIndex++;
+    
+    if (trialIndex==trialCount && userDone==false)
+    {
+      userDone = true;
+      finishTime = millis();
+    }
+  }
+    
 }
 
 
@@ -497,21 +516,6 @@ void mouseReleased()
   else
   {
     currColor = color(150, 150, 150);
-  }
-  //check to see if user clicked middle of screen within 3 inches
-  if (dist(width/2, height/2, mouseX, mouseY)<inchesToPixels(3f))
-  {
-    if (userDone==false && !checkForSuccess())
-      errorCount++;
-
-    //and move on to next trial
-    trialIndex++;
-    
-    if (trialIndex==trialCount && userDone==false)
-    {
-      userDone = true;
-      finishTime = millis();
-    }
   }
   
   // SIZE AND ORIENTATION CONTROL BOXES
@@ -623,16 +627,16 @@ public boolean checkForSuccessZ()
 //probably shouldn't modify this, but email me if you want to for some good reason.
 public boolean checkForSuccess()
 {
-	Target t = targets.get(trialIndex);	
-	boolean closeDist = dist(t.x,t.y,screenTransX,screenTransY)<inchesToPixels(.05f); //has to be within .1"
+  Target t = targets.get(trialIndex);  
+  boolean closeDist = dist(t.x,t.y,screenTransX,screenTransY)<inchesToPixels(.05f); //has to be within .1"
   boolean closeRotation = calculateDifferenceBetweenAngles(t.rotation,screenRotation)<=5;
-	boolean closeZ = abs(t.z - screenZ)<inchesToPixels(.05f); //has to be within .1"	
-	
+  boolean closeZ = abs(t.z - screenZ)<inchesToPixels(.05f); //has to be within .1"  
+  
   println("Close Enough Distance: " + closeDist + " (cursor X/Y = " + t.x + "/" + t.y + ", target X/Y = " + screenTransX + "/" + screenTransY +")");
   println("Close Enough Rotation: " + closeRotation + " (rot dist="+calculateDifferenceBetweenAngles(t.rotation,screenRotation)+")");
- 	println("Close Enough Z: " +  closeZ + " (cursor Z = " + t.z + ", target Z = " + screenZ +")");
-	
-	return closeDist && closeRotation && closeZ;	
+  println("Close Enough Z: " +  closeZ + " (cursor Z = " + t.z + ", target Z = " + screenZ +")");
+  
+  return closeDist && closeRotation && closeZ;  
 }
 
 //utility function I include
