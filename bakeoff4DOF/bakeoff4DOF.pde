@@ -86,6 +86,7 @@ int sidebarWidth = 400;
 float totalWidth = 880.0;
 //===============Calvin===============
 
+float doneX, doneY;
 
 // Target class
 
@@ -157,12 +158,15 @@ void setup() {
   
   ellipseMode(RADIUS);
   
+  doneX = totalWidth - inchesToPixels(.5f);
+  doneY = inchesToPixels(.5f) * 8;
+  
   cbx1 = totalWidth - inchesToPixels(.5f);
-  cby1 = inchesToPixels(.5f) * 8;
+  cby1 = inchesToPixels(.5f) * 10;
   cbx2 = totalWidth - inchesToPixels(.5f);
-  cby2 = inchesToPixels(.5f) * 9;
+  cby2 = inchesToPixels(.5f) * 11;
   cbx3 = totalWidth - inchesToPixels(.5f);
-  cby3 = inchesToPixels(.5f) * 10;
+  cby3 = inchesToPixels(.5f) * 12;
 }
 
 
@@ -236,6 +240,9 @@ void draw() {
   scaffoldControlLogic(); //you are going to want to replace this!
   text("Trial " + (trialIndex+1) + " of " +trialCount, width/2, inchesToPixels(.5f));
   
+  text("Done", doneX, doneY);
+  noFill();
+  rect(doneX, doneY, 100, 50);
   
   //===============Checkbox============
   //===============Calvin===============  
@@ -446,6 +453,22 @@ void scaffoldControlLogic()
       screenTransY+=inchesToPixels(.02f);
     }
   }
+  
+  //========== DONE BUTTON ==================
+   if (!pressed && mousePressed && mouseX > doneX - 50 && mouseX < doneX + 50 && mouseY > doneY - 25 && mouseY < doneY + 25) {
+     pressed = true;
+     if (userDone==false && !checkForSuccess())
+     errorCount++;
+ 
+     //and move on to next trial
+     trialIndex++;
+     
+     if (trialIndex==trialCount && userDone==false)
+     {
+       userDone = true;
+       finishTime = millis();
+     }
+   }
 }
 
 
@@ -500,21 +523,6 @@ void mouseReleased()
   else
   {
     currColor = color(150, 150, 150);
-  }
-  //check to see if user clicked middle of screen within 3 inches
-  if (dist(width/2, height/2, mouseX, mouseY)<inchesToPixels(3f))
-  {
-    if (userDone==false && !checkForSuccess())
-      errorCount++;
-
-    //and move on to next trial
-    trialIndex++;
-    
-    if (trialIndex==trialCount && userDone==false)
-    {
-      userDone = true;
-      finishTime = millis();
-    }
   }
   
   // SIZE AND ORIENTATION CONTROL BOXES
