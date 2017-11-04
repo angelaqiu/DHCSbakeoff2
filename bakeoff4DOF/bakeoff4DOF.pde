@@ -1,3 +1,4 @@
+ 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.awt.Robot;
@@ -200,6 +201,13 @@ void draw() {
   rotate(radians(t.rotation));
   fill(255, 0, 0); //set color to semi translucent
   rect(0, 0, t.z, t.z);
+  
+    // KIMBERLY - CROSSHAIR
+  strokeWeight(1f);
+  stroke(255);
+  line(0, -t.z/2, 0, t.z/2);
+  line(-t.z/2, 0, t.z/2, 0);  
+  
   popMatrix();
 
   //===========DRAW CURSOR SQUARE=================
@@ -227,8 +235,14 @@ void draw() {
   strokeWeight(3f);
   stroke(currColor);
   rect(0,0, screenZ, screenZ);
-  popMatrix();
   
+  // draw the crosshairs
+  strokeWeight(1f);
+  stroke(255);
+  line(-screenZ, 0, screenZ, 0);
+  line(0, -screenZ, 0, screenZ);
+  
+  popMatrix();
   
   fill(105,105,105);
   rect(900, 400, sidebarWidth, 800);
@@ -634,16 +648,16 @@ public boolean checkForSuccessZ()
 //probably shouldn't modify this, but email me if you want to for some good reason.
 public boolean checkForSuccess()
 {
-	Target t = targets.get(trialIndex);	
-	boolean closeDist = dist(t.x,t.y,screenTransX,screenTransY)<inchesToPixels(.05f); //has to be within .1"
+  Target t = targets.get(trialIndex);  
+  boolean closeDist = dist(t.x,t.y,screenTransX,screenTransY)<inchesToPixels(.05f); //has to be within .1"
   boolean closeRotation = calculateDifferenceBetweenAngles(t.rotation,screenRotation)<=5;
-	boolean closeZ = abs(t.z - screenZ)<inchesToPixels(.05f); //has to be within .1"	
-	
+  boolean closeZ = abs(t.z - screenZ)<inchesToPixels(.05f); //has to be within .1"  
+  
   println("Close Enough Distance: " + closeDist + " (cursor X/Y = " + t.x + "/" + t.y + ", target X/Y = " + screenTransX + "/" + screenTransY +")");
   println("Close Enough Rotation: " + closeRotation + " (rot dist="+calculateDifferenceBetweenAngles(t.rotation,screenRotation)+")");
- 	println("Close Enough Z: " +  closeZ + " (cursor Z = " + t.z + ", target Z = " + screenZ +")");
-	
-	return closeDist && closeRotation && closeZ;	
+   println("Close Enough Z: " +  closeZ + " (cursor Z = " + t.z + ", target Z = " + screenZ +")");
+  
+  return closeDist && closeRotation && closeZ;  
 }
 
 //utility function I include
