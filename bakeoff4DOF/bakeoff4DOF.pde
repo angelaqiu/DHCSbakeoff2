@@ -260,7 +260,7 @@ void draw() {
   
   //===============Checkbox============
   //===============Calvin===============  
-  if (checkForSuccessDist()) {
+  if (!userDone && checkForSuccessDist()) {
     fill(0, 255, 0);
     text("[  x  ]  Location", cbx1, cby1);
   } else {
@@ -268,7 +268,7 @@ void draw() {
     text("[     ]  Location", cbx1, cby1);
   }
 
-  if (checkForSuccessZ()) {
+  if (!userDone && checkForSuccessZ()) {
     fill(0, 255, 0);
     text("[  x  ]  Size      ", cbx2, cby2);
   } else {
@@ -276,7 +276,7 @@ void draw() {
     text("[     ]  Size      ", cbx2, cby2);
   }
   
-  if (checkForSuccessRotation()) {
+  if (!userDone && checkForSuccessRotation()) {
     fill(0, 255, 0);
     text("[  x  ]  Rotation", cbx3, cby3);
   } else {
