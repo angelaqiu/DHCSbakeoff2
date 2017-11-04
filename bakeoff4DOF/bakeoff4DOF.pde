@@ -7,7 +7,7 @@ import java.awt.MouseInfo;
 
 //these are variables you should probably leave alone
 int index = 0;
-int trialCount = 8; //this will be set higher for the bakeoff
+int trialCount = 3; //this will be set higher for the bakeoff
 float border = 0; //have some padding from the sides
 int trialIndex = 0; //what trial are we on
 int errorCount = 0;  //used to keep track of errors
@@ -40,8 +40,8 @@ float yOffset = 0.0;
 int windowX, windowY, absMouseX, absMouseY;  // for mouse positioning
 
 float sizeButtonLeft, sizeButtonTop, sizeButtonRight, sizeButtonBottom;
-float sizeControlLength = 150;
-float sizeControlLength2 = 150;
+float sizeControlLength = 300;
+float sizeControlLength2 = 300;
 
 float sizeControlDefaultX;
 float sizeControlDefaultY;
@@ -82,8 +82,8 @@ float cby3;
 
 // Paras for sidebar
 //===============Calvin===============
-int sidebarWidth = 200;
-float totalWidth = 900.0;
+int sidebarWidth = 400;
+float totalWidth = 880.0;
 //===============Calvin===============
 
 float doneX, doneY;
@@ -109,7 +109,7 @@ float inchesToPixels(float inch)
 void setup() {
   // Adjusted size
   //===============Calvin===============
-  size(1000,800); // WAS 800
+  size(1100,700); // WAS 800
   //===============Calvin===============
 
   rectMode(CENTER);
@@ -138,7 +138,7 @@ void setup() {
   
   //===========TEST CONTROL BOX STUFF=================
   
-  bx = totalWidth - inchesToPixels(.2f) * 5;
+  bx = totalWidth - inchesToPixels(.2f) * 10;
   by = inchesToPixels(.2f) * 12;
   sizeControlDefaultX = bx;
   sizeControlDefaultY = by;
@@ -147,7 +147,7 @@ void setup() {
   sizeButtonTop = by - buttonSize;
   sizeButtonBottom = by + buttonSize;
     
-  bx2 = totalWidth - inchesToPixels(.2f) * 5;
+  bx2 = totalWidth - inchesToPixels(.2f) * 10;
   by2 = inchesToPixels(.2f) * 12 + distanceBetweenControls;
   sizeControlDefaultX2 = bx2;
   sizeControlDefaultY2 = by2;
@@ -167,8 +167,9 @@ void setup() {
   cby2 = inchesToPixels(.5f) * 11;
   cbx3 = totalWidth - inchesToPixels(.5f);
   cby3 = inchesToPixels(.5f) * 12;
-  
 }
+
+
 
 void draw() {
   
@@ -211,6 +212,7 @@ void draw() {
   //===========DRAW CURSOR SQUARE=================
   
   // Test if the cursor is over the box 
+  //print(width, totalWidth, sidebarWidth, "\n");
   if (mouseX > screenTransX-screenZ+(width/2) && mouseX < screenTransX+screenZ+(width/2) && 
       mouseY > screenTransY-screenZ+(height/2) && mouseY < screenTransY+screenZ+(height/2)) {
     overBox3 = true;  
@@ -218,7 +220,11 @@ void draw() {
     overBox3 = false;
     }
   }
-  
+  else
+  {
+    overBox3 = false;
+  }
+  print(overBox3, "\n");
   //print(overBox3, screenTransX, screenTransY, screenZ, "\n");
   pushMatrix();
   translate(width/2, height/2); //center the drawing coordinates to the center of the screen
@@ -239,7 +245,7 @@ void draw() {
   
   
   fill(105,105,105);
-  rect(900, 400, 200, 800);  
+  rect(900, 400, sidebarWidth, 800);
   
 
 
@@ -280,6 +286,8 @@ void draw() {
     
   fill(255);
   //===============Calvin===============  
+
+  
 
   
   //===========DRAW SIZE CONTROL =================
@@ -340,6 +348,7 @@ void draw() {
     fill(0,255,0);
     ellipse(bx2, by2, buttonSize, buttonSize);
     
+    
     //=========== CONSTRAIN MOUSE WITHIN WINDOW =================
     MouseInfo.getPointerInfo();
     Point pt = MouseInfo.getPointerInfo().getLocation();
@@ -371,7 +380,7 @@ void draw() {
 void scaffoldControlLogic()
 {
   if(locked)
-    screenZ = (bx - sizeControlDefaultX + buttonSize)*inchesToPixels(.10f);
+    screenZ = (bx - sizeControlDefaultX + buttonSize)*inchesToPixels(.02f);
   
   // finer size control buttons
   float buffer = 15;
@@ -399,7 +408,7 @@ void scaffoldControlLogic()
   }
 
   if(locked2)
-    screenRotation = (bx2 / (sizeButtonRight2 - sizeControlDefaultX2)) * 10;   
+    screenRotation = (bx2 / (sizeButtonRight2 - sizeControlDefaultX2)) * 6;   
 
   // finer orientation control buttons
   text("⤾", sizeControlDefaultX2+sizeControlLength + buffer, sizeControlDefaultY2 + 5);
@@ -460,21 +469,20 @@ void scaffoldControlLogic()
   }
   
   //========== DONE BUTTON ==================
-  if (!pressed && mousePressed && mouseX > doneX && mouseX < doneX + 100 && mouseY > doneY && mouseY < doneY + 50) {
-    pressed = true;
-    if (userDone==false && !checkForSuccess())
-    errorCount++;
-
-    //and move on to next trial
-    trialIndex++;
-    
-    if (trialIndex==trialCount && userDone==false)
-    {
-      userDone = true;
-      finishTime = millis();
-    }
-  }
-    
+   if (!pressed && mousePressed && mouseX > doneX - 50 && mouseX < doneX + 50 && mouseY > doneY - 25 && mouseY < doneY + 25) {
+     pressed = true;
+     if (userDone==false && !checkForSuccess())
+     errorCount++;
+ 
+     //and move on to next trial
+     trialIndex++;
+     
+     if (trialIndex==trialCount && userDone==false)
+     {
+       userDone = true;
+       finishTime = millis();
+     }
+   }
 }
 
 
@@ -509,8 +517,7 @@ void mousePressed()
     
     // Main Box
     if(overBox3) { 
-    locked3 = true; 
-    //fill(255, 255, 255);
+    locked3 = true;
     } else {
       locked3 = false;
     }
@@ -641,16 +648,16 @@ public boolean checkForSuccessZ()
 //probably shouldn't modify this, but email me if you want to for some good reason.
 public boolean checkForSuccess()
 {
-  Target t = targets.get(trialIndex);  
-  boolean closeDist = dist(t.x,t.y,screenTransX,screenTransY)<inchesToPixels(.05f); //has to be within .1"
+	Target t = targets.get(trialIndex);	
+	boolean closeDist = dist(t.x,t.y,screenTransX,screenTransY)<inchesToPixels(.05f); //has to be within .1"
   boolean closeRotation = calculateDifferenceBetweenAngles(t.rotation,screenRotation)<=5;
-  boolean closeZ = abs(t.z - screenZ)<inchesToPixels(.05f); //has to be within .1"  
-  
+	boolean closeZ = abs(t.z - screenZ)<inchesToPixels(.05f); //has to be within .1"	
+	
   println("Close Enough Distance: " + closeDist + " (cursor X/Y = " + t.x + "/" + t.y + ", target X/Y = " + screenTransX + "/" + screenTransY +")");
   println("Close Enough Rotation: " + closeRotation + " (rot dist="+calculateDifferenceBetweenAngles(t.rotation,screenRotation)+")");
-  println("Close Enough Z: " +  closeZ + " (cursor Z = " + t.z + ", target Z = " + screenZ +")");
-  
-  return closeDist && closeRotation && closeZ;  
+ 	println("Close Enough Z: " +  closeZ + " (cursor Z = " + t.z + ", target Z = " + screenZ +")");
+	
+	return closeDist && closeRotation && closeZ;	
 }
 
 //utility function I include
